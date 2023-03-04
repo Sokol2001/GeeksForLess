@@ -1,5 +1,19 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model GeeksForLess.Models.Folder
+
+
+<div class="container">
+
+    <div class="header">
+        <a asp-controller="Folder" asp-action="SaveDbToJson">Get data from file</a>
+        <a> | </a>
+        <a asp-controller="Folder" asp-action="SaveDbToJson">Get data from system</a>
+    </div>
+
+
+    @if(Model.Id != 0)
+    {
+        <a>"Check Folder" - </a>
+        <a asp-controller="Folder" asp-action="Index" class="text-primary">@Model.Name</a>
+    }
+    
+</div>

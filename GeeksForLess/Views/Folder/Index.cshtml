@@ -1,29 +1,36 @@
 ﻿@model IEnumerable<GeeksForLess.Models.Folder>
 
 <div class="container">
-        @if(Model.Count() > 0)
+
+    <div class="header">
+        <a asp-controller="Home" asp-action="Index">Home</a>
+        <a> | </a>
+        <a asp-controller="Folder" asp-action="SaveDbToJson">Save</a>
+    </div>
+
+    @if (Model.Count() > 0)
+    {
+        @if (Model.First().IsSelected)
         {
-            @if (Model.First().IsSelected)
-            {   
-                <div class="mb-3">
-                    <h2 class="text-primary">"Folder" - @Model.First().Name</h2>
+            <div>
+                <h2>"Folder" - @Model.First().Name</h2>
 
-                    @foreach (var obj in Model)
+                @foreach (var obj in Model)
+                {
+                    @if (Model.First().ChildFoldersIds != null)
                     {
-                        @if (Model.First().ChildFoldersIds != null)
+                        @if (Model.First().ChildFoldersIds.Contains(obj.Id.ToString()))
                         {
-                            @if (Model.First().ChildFoldersIds.Contains(obj.Id.ToString()))
-                            {
-                                <a asp-controller="Folder" asp-route-Id="@obj.Id" asp-action="Index">
-                                    <h3>@obj.Name</h3>
-                                </a>
+                            <a asp-controller="Folder" asp-route-Id="@obj.Id" asp-action="Index">
+                                <h3>@obj.Name</h3>
+                            </a>
 
-                            }
                         }
                     }
-                    
-                </div>
-                
-            }
+                }
+
+            </div>
         }
+    }
+
 </div>
