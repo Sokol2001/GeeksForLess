@@ -7,6 +7,7 @@ namespace GeeksForLess.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<int> ChildFoldersIds { get; set; }
+        public string? ChildFoldersIds { get; set; }
+        public bool IsSelected { get; set; } = false;
     }
 }
