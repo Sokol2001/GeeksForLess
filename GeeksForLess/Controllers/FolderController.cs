@@ -1,7 +1,9 @@
 ﻿using GeeksForLess.Data;
 using GeeksForLess.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace GeeksForLess.Controllers
 {
@@ -69,6 +71,33 @@ namespace GeeksForLess.Controllers
             {
                 return NotFound(); //TODO: add show error "Incorrect path"
             }
+
+        }
+
+        public IActionResult GetDbFromJson()
+        {
+            try
+            {
+                var fileName = @"file.json";
+                var data = System.IO.File.ReadAllText(fileName);
+                var folders = JsonConvert.DeserializeObject<IEnumerable<Folder>>(data);
+
+                if(_db.Folder.Count() != 0)
+                {
+                    _db.Folder.RemoveRange(_db.Folder);
+                }
+
+                //_db.Folder.AddRange(folders);
+
+                _db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return NotFound(); //TODO: add show error "Incorrect path"
+            }
+
 
         }
     }

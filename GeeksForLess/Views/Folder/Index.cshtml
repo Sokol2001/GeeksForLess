@@ -12,19 +12,18 @@
     {
         @if (Model.First().IsSelected)
         {
-            <div>
-                <h2>"Folder" - @Model.First().Name</h2>
+            <div style="margin-top:25px">
+                <p>"Folder" - @Model.First().Name</p>
 
                 @foreach (var obj in Model)
                 {
-                    @if (Model.First().ChildFoldersIds != null)
+                    @if (Model.First().ChildFoldersKeys != null)
                     {
-                        @if (Model.First().ChildFoldersIds.Contains(obj.Id.ToString()))
+                        @if (Model.First().ChildFoldersKeys.Contains(obj.FolderKey.ToString()))
                         {
                             <a asp-controller="Folder" asp-route-Id="@obj.Id" asp-action="Index">
-                                <h3>@obj.Name</h3>
+                                <p>@obj.Name</p>
                             </a>
-
                         }
                     }
                 }

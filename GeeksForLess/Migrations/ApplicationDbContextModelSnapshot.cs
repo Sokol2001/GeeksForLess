@@ -29,8 +29,11 @@ namespace GeeksForLess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ChildFoldersIds")
+                    b.Property<string>("ChildFoldersKeys")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FolderKey")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsSelected")
                         .HasColumnType("bit");

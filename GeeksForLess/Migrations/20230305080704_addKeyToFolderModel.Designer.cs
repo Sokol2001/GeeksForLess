@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeeksForLess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230304100944_updatedFolderModel")]
-    partial class updatedFolderModel
+    [Migration("20230305080704_addKeyToFolderModel")]
+    partial class addKeyToFolderModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,8 +32,11 @@ namespace GeeksForLess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ChildFoldersIds")
+                    b.Property<string>("ChildFoldersKeys")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FolderKey")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsSelected")
                         .HasColumnType("bit");

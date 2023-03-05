@@ -15,15 +15,20 @@ namespace GeeksForLess.Controllers
 
         public IActionResult Index()
         {
-            var newParentFolder = _db.Folder.OrderBy(x => x.Id).First();
+            if(_db.Folder.Count() != 0)
+            {
+                var newParentFolder = _db.Folder.OrderBy(x => x.FolderKey).First();
 
-            newParentFolder.IsSelected = true;
+                newParentFolder.IsSelected = true;
 
-            _db.Folder.Update(newParentFolder);
+                _db.Folder.Update(newParentFolder);
 
-            _db.SaveChanges();
+                _db.SaveChanges();
 
-            return View(newParentFolder);
+                return View(newParentFolder);
+            }
+            return View();
+
         }
 
     }
