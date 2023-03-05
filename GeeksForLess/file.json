@@ -1,8 +1,1 @@
-[{"FolderKey":4,"Name":"Creating Digital Images","ChildFoldersKeys":"5 6 7","IsSelected":true},
-{"FolderKey":5,"Name":"Resources","ChildFoldersKeys":"8 9","IsSelected":false},
-{"FolderKey":6,"Name":"Evidence","ChildFoldersKeys":null,"IsSelected":false},
-{"FolderKey":7,"Name":"Graphic Products","ChildFoldersKeys":"10 11","IsSelected":false},
-{"FolderKey":8,"Name":"Primary Sources","ChildFoldersKeys":null,"IsSelected":false},
-{"FolderKey":9,"Name":"Secondary Sources","ChildFoldersKeys":null,"IsSelected":false},
-{"FolderKey":10,"Name":"Process","ChildFoldersKeys":null,"IsSelected":false},
-{"FolderKey":11,"Name":"Final Product","ChildFoldersKeys":null,"IsSelected":false}]
+[{"FolderKey":0,"Name":"Creating Digital Images","ChildFoldersKeys":" 1 2 5","IsSelected":true},{"FolderKey":1,"Name":"Evidence","ChildFoldersKeys":null,"IsSelected":true},{"FolderKey":2,"Name":"Graphic Products","ChildFoldersKeys":" 3 4","IsSelected":false},{"FolderKey":3,"Name":"Final Product","ChildFoldersKeys":null,"IsSelected":false},{"FolderKey":4,"Name":"Process","ChildFoldersKeys":null,"IsSelected":false},{"FolderKey":5,"Name":"Resources","ChildFoldersKeys":" 6 7","IsSelected":false},{"FolderKey":6,"Name":"Primary Sources","ChildFoldersKeys":null,"IsSelected":false},{"FolderKey":7,"Name":"Secondary Sources","ChildFoldersKeys":null,"IsSelected":false}]

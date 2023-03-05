@@ -5,7 +5,7 @@
 namespace GeeksForLess.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class createDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,8 +16,10 @@ namespace GeeksForLess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    FolderKey = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ChildFoldersIds = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ChildFoldersKeys = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsSelected = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

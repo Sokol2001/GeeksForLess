@@ -39,11 +39,11 @@ namespace GeeksForLess.Controllers
 
         public IActionResult SaveDbToJson()
         {
-            return View(new Models.File());
+            return View(new DirectoryEllement());
         }
 
         [HttpPost]
-        public IActionResult SaveDbToJson(Models.File file)
+        public IActionResult SaveDbToJson(DirectoryEllement file)
         {
             if(file.Name == null)
             {
@@ -56,7 +56,14 @@ namespace GeeksForLess.Controllers
 
             try
             {
-                using StreamWriter creatingFile = new(file.Name);
+                string rootPath = string.Empty;
+
+                if (file.RootPath != null)
+                {
+                    rootPath = file.RootPath.EndsWith("\\") ? file.RootPath : $"{file.RootPath}\\";
+                }
+
+                using StreamWriter creatingFile = new(rootPath + file.Name);
 
                 creatingFile.Write(json);
 
@@ -64,116 +71,118 @@ namespace GeeksForLess.Controllers
             }
             catch
             {
-                return NotFound(); //TODO: add show error "Incorrect path"
+                return NotFound();
             }
 
         }
 
         public IActionResult GetDbFromJson()
         {
-            return View(new Models.File());
+            return View(new DirectoryEllement());
         }
 
         [HttpPost]
-        public IActionResult GetDbFromJson(Models.File file)
+        public IActionResult GetDbFromJson(DirectoryEllement file)
         {
             if (file.Name == null)
             {
-                return NotFound(); //TODO: add show error "Incorrect path"
+                return NotFound();
             }
             try
             {
-                var data = System.IO.File.ReadAllText(file.Name);
+                string rootPath = string.Empty;
+
+                if (file.RootPath != null)
+                {
+                    rootPath = file.RootPath.EndsWith("\\") ? file.RootPath : $"{file.RootPath}\\";
+                }
+
+                var data = System.IO.File.ReadAllText(rootPath + file.Name);
 
                 var folders = JsonConvert.DeserializeObject<IEnumerable<Folder>>(data);
 
-                if (_db.Folder.Count() != 0)
-                {
-                    _db.Folder.RemoveRange(_db.Folder);
-                }
-
-                _db.Folder.AddRange(folders);
-
-                _db.SaveChanges();
+                ChangeDataInDb(folders);
 
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View(new Models.File()); //TODO: add show error 
+                return View(new DirectoryEllement()); 
             }
         }
 
         public IActionResult GetDbFromSystemDir()
         {
-            var rootPath = "D:";
-            var currentFolderName = "Creating Digital Images";
+            return View(new DirectoryEllement());
+        }
+
+        [HttpPost]
+        public IActionResult GetDbFromSystemDir(Models.DirectoryEllement file)
+        {
+            var rootPath = file.RootPath.EndsWith("\\") ? file.RootPath : $"{file.RootPath}\\";
+            var currentFolderName = file.Name;
 
             List<Folder> folders = new();
-
-            int folderCounter = 0;
 
             var currentRootPath = $"{rootPath}\\{currentFolderName}";
 
             if (Directory.Exists(rootPath))
             {
-                int currentKey = folderCounter++;
+                folders = AddChildFolders(folders, -1, new[] { currentRootPath }, rootPath);
 
-                folders.Add(new Folder
-                {
-                    Name = currentRootPath.Replace($"{rootPath}\\", string.Empty),
-                    FolderKey = currentKey,
-
-                });
-
-                string[] childFolderPaths = Directory.GetDirectories(currentRootPath, "*", SearchOption.TopDirectoryOnly);
-
-                if(childFolderPaths.Length != 0)
-                {
-                    folders = AddChildFolders(folders, folderCounter, currentKey, childFolderPaths, currentRootPath);
-                }
+                ChangeDataInDb(folders);
 
                 return RedirectToAction("Index");
             }
             else
             {
-                return NotFound(); //TODO: add show error "Incorrect path"
+                return NotFound();
             }
 
         }
 
-        private List<Folder> AddChildFolders(List<Folder> folders, int folderCounter, int rootFolderKey, string[] childFolderPaths, string rootPath)
+        private void ChangeDataInDb(IEnumerable<Folder> folders)
         {
-            List<int> currentKeys = new List<int>();
-            foreach (var currentRootPath in childFolderPaths)
+            if (_db.Folder.Count() != 0)
+            {
+                _db.Folder.RemoveRange(_db.Folder);
+            }
+
+            _db.Folder.AddRange(folders);
+
+            _db.SaveChanges();
+        }
+
+        private List<Folder> AddChildFolders(List<Folder> folders, int rootFolderKey, string[] childFolderPaths, string rootPath)
+        {
+            foreach(var currentRootPath in childFolderPaths)
             {
                 if (Directory.Exists(currentRootPath))
                 {
-                    int currentKey = folderCounter++;
+                    int currentKey = folders.Count();
 
                     folders.Add(new Folder
                     {
                         Name = currentRootPath.Replace($"{rootPath}\\", string.Empty),
                         FolderKey = currentKey,
-
                     });
 
-                    folders.Single(x => x.FolderKey == rootFolderKey).ChildFoldersKeys += $" {currentKey}";
-                    currentKeys.Add(currentKey);
-                }
+                    if(rootFolderKey != -1)
+                    {
+                        folders.Single(x => x.FolderKey == rootFolderKey).ChildFoldersKeys += $" {currentKey}";
+                        folders.Single(x => x.FolderKey == rootFolderKey).IsSelected = true;
+                    }
 
+                    string[] currentChildFolderPaths = Directory.GetDirectories(currentRootPath, "*", SearchOption.TopDirectoryOnly);
+
+                    if (childFolderPaths.Length != 0)
+                    {
+                        folders = AddChildFolders(folders, currentKey, currentChildFolderPaths, currentRootPath);
+                    }
+                }
             }
 
-            for (int childNumber = 0; childNumber < childFolderPaths.Length; childNumber++)
-            {
-                string[] currentChildFolderPaths = Directory.GetDirectories(childFolderPaths[childNumber], "*", SearchOption.TopDirectoryOnly);
-
-                if (childFolderPaths.Length != 0)
-                {
-                    folders = AddChildFolders(folders, folderCounter, currentKeys[childNumber], currentChildFolderPaths, childFolderPaths[childNumber]);
-                }
-            }
-                return folders;
+            return folders;
         }
     }
 }
