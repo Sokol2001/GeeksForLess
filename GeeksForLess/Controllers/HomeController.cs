@@ -1,6 +1,7 @@
 ﻿using GeeksForLess.Data;
 using GeeksForLess.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GeeksForLess.Controllers
 {
@@ -17,6 +18,14 @@ namespace GeeksForLess.Controllers
         {
             if(_db.Folder.Count() != 0)
             {
+                var activeFolders = _db.Folder.Where(x => x.IsSelected == true);
+
+                foreach (var folder in activeFolders)
+                {
+                    folder.IsSelected = false;
+                    _db.Folder.Update(folder);
+                }
+
                 var newParentFolder = _db.Folder.OrderBy(x => x.FolderKey).First();
 
                 newParentFolder.IsSelected = true;
