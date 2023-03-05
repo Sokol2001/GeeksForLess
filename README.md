@@ -16,4 +16,5 @@ How to use:
   - Click on child folder name to see the child folder
   
   You can use "example.json" from this repository for gеtting data from file.
+  
   If you see "HTTP 404 Not Found" after having inputed path and name of file or folder, you should go back and check inputed data.   
