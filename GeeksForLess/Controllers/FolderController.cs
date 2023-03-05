@@ -126,7 +126,7 @@ namespace GeeksForLess.Controllers
 
                 });
 
-                string[] childFolderPaths = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly);
+                string[] childFolderPaths = Directory.GetDirectories(currentRootPath, "*", SearchOption.TopDirectoryOnly);
 
                 if(childFolderPaths.Length != 0)
                 {
@@ -144,7 +144,8 @@ namespace GeeksForLess.Controllers
 
         private List<Folder> AddChildFolders(List<Folder> folders, int folderCounter, int rootFolderKey, string[] childFolderPaths, string rootPath)
         {
-            foreach(var currentRootPath in childFolderPaths)
+            List<int> currentKeys = new List<int>();
+            foreach (var currentRootPath in childFolderPaths)
             {
                 if (Directory.Exists(currentRootPath))
                 {
@@ -158,18 +159,21 @@ namespace GeeksForLess.Controllers
                     });
 
                     folders.Single(x => x.FolderKey == rootFolderKey).ChildFoldersKeys += $" {currentKey}";
-
-                    string[] currentChildFolderPaths = Directory.GetDirectories(currentRootPath, "*", SearchOption.TopDirectoryOnly);
-
-                    if (childFolderPaths.Length != 0)
-                    {
-                        folders = AddChildFolders(folders, folderCounter, currentKey, currentChildFolderPaths, currentRootPath);
-                    }
-
+                    currentKeys.Add(currentKey);
                 }
 
             }
-            return folders;
+
+            for (int childNumber = 0; childNumber < childFolderPaths.Length; childNumber++)
+            {
+                string[] currentChildFolderPaths = Directory.GetDirectories(childFolderPaths[childNumber], "*", SearchOption.TopDirectoryOnly);
+
+                if (childFolderPaths.Length != 0)
+                {
+                    folders = AddChildFolders(folders, folderCounter, currentKeys[childNumber], currentChildFolderPaths, childFolderPaths[childNumber]);
+                }
+            }
+                return folders;
         }
     }
 }
